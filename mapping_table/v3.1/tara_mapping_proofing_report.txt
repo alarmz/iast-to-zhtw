@@ -1,0 +1,6 @@
+Proofing Report for Tara 108 Names Mapping
+------------------------------------------
+Total Chinese entries: 108
+Total IAST entries:   108
+
+All in-text indices match expected order.

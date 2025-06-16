@@ -1,0 +1,4 @@
+python zh_to_iast_table_v2.py new_mantra.txt \
+       --map zh_iast_mapping.json \
+       --aux aux_markers.json \
+       --out new_mantra_mapping.txt

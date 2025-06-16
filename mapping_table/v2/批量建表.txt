@@ -1,0 +1,3 @@
+python build_mapping_from_parallel.py  tara_full_mapping.txt \
+       --aux aux_markers.json \
+       --out zh_iast_mapping.json
