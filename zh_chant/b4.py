@@ -34,8 +34,8 @@ LONG_VOWEL_BOPOMOFO = {
 
 # 要刪掉的音節提示（輸出前移除）
 PRONUN_HINTS_TO_REMOVE = [
-    "合", "引", "上", "去", "平", "入",
-    "聲呼", "轉舌", "反", "切身", "准", "無鉢", "魚夭"
+    "上", "去", "入", "平", "引", "聲呼", "三合", "二合", "四合",
+    "轉舌", "無鉢反轉舌", "切身引", "魚夭反", "呼", "准", "准上"
 ]
 
 def is_chinese_numeral(text):
@@ -65,7 +65,7 @@ def annotate_zh_text_with_bopomofo(raw_text):
         line = clean_line(line)
         footnote = ''
 
-        # 處理尾段 (一)(二十)
+        # 步驟2：偵測尾段註腳 (一)
         footnote_match = re.search(r'\(([^()]+)\)\s*$', line)
         if footnote_match:
             possible_number = footnote_match.group(1)
@@ -77,27 +77,32 @@ def annotate_zh_text_with_bopomofo(raw_text):
         annotated_line = []
 
         for part in parts:
-            # 移除括號內提示符，僅保留文字
-            char_text = re.sub(r'\([^()]*\)', '', part)
-            chars = list(char_text)
+            char, hints = extract_annotation(part)
 
-            for char in chars:
-                # 注音
-                if char in CUSTOM_BOPOMOFO:
-                    bopomofo = CUSTOM_BOPOMOFO[char]
-                else:
-                    zh_bopomofo = pinyin(char, style=Style.BOPOMOFO, errors='ignore')
-                    bopomofo = zh_bopomofo[0][0] if zh_bopomofo else '？'
+            # 注音來源
+            if char in CUSTOM_BOPOMOFO:
+                bopomofo = CUSTOM_BOPOMOFO[char]
+            else:
+                zh_bopomofo = pinyin(char, style=Style.BOPOMOFO, errors='ignore')
+                bopomofo = zh_bopomofo[0][0] if zh_bopomofo else '？'
 
-                if bopomofo in LONG_VOWEL_BOPOMOFO:
-                    bopomofo = LONG_VOWEL_BOPOMOFO[bopomofo]
+            # 長音標記
+            if bopomofo in LONG_VOWEL_BOPOMOFO:
+                bopomofo = LONG_VOWEL_BOPOMOFO[bopomofo]
 
-                annotated_line.append(f'{char}({bopomofo})')
+            # 步驟3：過濾提示，只輸出非拼音提示
+            hints = [h for h in hints if not is_pronun_hint_to_remove(h)]
+
+            if hints:
+                annotated = f'{char}({bopomofo}｜{",".join(hints)})'
+            else:
+                annotated = f'{char}({bopomofo})'
+
+            annotated_line.append(annotated)
 
         result_lines.append(' '.join(annotated_line) + (f' {footnote}' if footnote else ''))
 
     return '\n'.join(result_lines)
-
 
 def main():
     parser = argparse.ArgumentParser(description='中文咒語加注音與發音提示工具')
