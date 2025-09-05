@@ -4,20 +4,24 @@ from indic_transliteration.sanscript import transliterate, VELTHUIS, IAST
 #csx_text = "Tadyath2, ar02-gl2ne 0} 0} marda0 chid sa3-bhavatu sv2h2."
 #csx_text = "Nama 2rya-ma#ju0r1 bodhisattv2ya mah2sattv2ya. Tadyath2, om, 2-rak=a janaya sv2h2."
 csx_text = """
-Namo bhagavate siddha-aparyanta-vipula-acintya-pra5idh2na-va0a,
-na tat ki3 sarva sattv2m apa-v2da0 ca pr25i-bh9tam uparodha-k2rin
-pra-v4tti pratigha-citta3, bodhi-cary2-gati3-gata-avivartya-sa3panne,
-a-parim25a-gu5a-s2gara-0ubha-sa3bh4ta-sa3bh2ra-parip9r5e, sarva-
-jagad-du`kha-agni-skandha-nirv2payit4, anuttara-pradh2na mah2-
-2dar0a-j#2na-prabh2va da0a-dig-vipula-ma{gala-prabh2-samanta-
-avabh2sa-loka-dh2tau ak=obhy2ya tath2gat2ya arhate samyak-
-sa3buddh2ya. Om, adhim2tra-k2ru5ik2 pra-5idh2na-vi0e=a-gu5a
-dharma-mukha sarva-loka-anugraha, mah2-2dar0a-j#2na tejo-
-anubh2va adhi=6hite, sarva paripakva-ku0ala-m9la-sattv23 pra5idhi-
-anta-vel2 pari-h4daye abhirati-buddha-vi=aya3 sa3-graha; vajra-
-sattva vajra-r2ja vajra-r2ga vajra-har=a catur-2rya bodhisattv23
-mah2-2vedha-va0am a-parikheda sarva-yoga-2cara` pari-tr2ya5e
-sa3s2ra apa-kar=a5e sv2h2.
+O3, 0r1 k2ry25i mah2-teja loka-dh2t4, mah2-ya02 sarasvat1 vi=a 2-
+rak=i, praj#2-0r1 buddhi vardhani dh4tin2 pu=6in2 sv2h2. O3, k2r2
+k2ma-r9pin sarva sattva hitod-yukt2 sa3-gr2mott2ra5i, jay2 praj#2-
+p2ramit2 devye, 2rya-t2r2 manoram2 dundubh1 0a{khin1 p9r52 vidy2-
+r2j#1, priya3-v2d2 candr2nan2 mah2-gaur1, ajita p1ta-v2sas2, mah2-
+m2ya mah2-0vet2 mah2-bala par2-kram2, mah2-rudra mah2-ca57a
+du=6a-sattva ni-s9dani. Pra-02nt2 02nta r9pâcar, vi-jay2 jvalana-
+prabh2 vidyu-m2lin dhvaji 0a{khi garji cakri dhanur-dhar2 jambhani
+stambhani, k2l1 k2la-r2tr1 ni02-car1 r2k=as1 mohani, 02nti k2nt2r1
+dravi7i, 0ubh2 br2hma5i vida m2tâcar, guhil2 guha-v2sini ma{galy2,
+0a3kar1 saumy2 j2ta vid2 manojav2-k2p2lini, mah2-dev1 sa3dhy2
+satya apar2jit2 s2ratha v2ha k4p2-vi=62 na=6a. M2rga pra-dar0ani
+varad2 02sani-0astri. Str1-r9pa v4tta vi-kram2 0avari-yogin1, siddh2
+ca572l1 amit2 dhruv2, dhanya pu5ya mah2-bhag2 su-bhag2 priya
+dar0an2, k4tânt2 tr2sani bh1ma ugr2, ugra mah2-tapa jagadika hitod-
+yukt2, sara5ya bhakti vatsala v2g10var1, 0iv2 s9k=ma nitya sarvatra
+janu-j2 sarva-artha-s2dhani, bhadr2 gho=64 dh2t4 dhana3 dad2 a-
+bhay2, gautam1 pu5ya-0r1mat loke0var2m acyuti.
 """
 
 # 1️⃣ 先處理多碼組合（順序一定要在單碼之前）
