@@ -67,26 +67,94 @@ IAST_TO_ZHUYIN = {
 iast_keys = sorted(IAST_TO_ZHUYIN, key=lambda x: -len(x))
 iast_pattern = re.compile('|'.join(re.escape(k) for k in iast_keys))
 
-def iast_to_zhuyin(text: str) -> str:
-    def replace(match):
-        return IAST_TO_ZHUYIN.get(match.group(0), match.group(0))
-    return iast_pattern.sub(replace, text)
+def iast_to_zhuyin_sentence_pairs_1(text: str) -> list:
+    results = []
+    lines = text.splitlines()
+    for line in lines:
+        if not line.strip():
+            continue
+        zhuyin_line = ''
+        index = 0
+        while index < len(line):
+            match = iast_pattern.match(line, index)
+            if match:
+                iast = match.group(0)
+                zhuyin = IAST_TO_ZHUYIN[iast]
+                zhuyin_line += zhuyin
+                index += len(iast)
+            else:
+                zhuyin_line += line[index]
+                index += 1
+        results.append((line, zhuyin_line))
+    return results
+
+def iast_to_zhuyin_sentence_pairs(text: str) -> list:
+    # 分隔符：遇到這些字元就先把目前的注音 token 用「△」串起來輸出，再原樣輸出分隔符
+    SEP_PATTERN = re.compile(r"[\s/,\.\-;:()【】\[\]{}!?]+")
+    results = []
+
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+
+        zhuyin_out = []
+        tokens = []          # 暫存連續的注音片段，之後用「△」連接
+        idx = 0
+        L = len(line)
+
+        def flush_tokens():
+            nonlocal tokens
+            if tokens:
+                zhuyin_out.append("△".join(tokens))
+                tokens = []
+
+        while idx < L:
+            # 1) 先找分隔字元（空白/斜線/標點…）
+            m_sep = SEP_PATTERN.match(line, idx)
+            if m_sep:
+                # 把目前累積的注音 token 先輸出（用△相連），再輸出原始分隔符
+                flush_tokens()
+                zhuyin_out.append(m_sep.group(0))
+                idx = m_sep.end()
+                continue
+
+            # 2) 嘗試匹配 IAST 片段
+            m = iast_pattern.match(line, idx)
+            if m:
+                iast = m.group(0)
+                tokens.append(IAST_TO_ZHUYIN[iast])
+                idx += len(iast)
+            else:
+                # 3) 非映射字元（例如數字、其他符號等）
+                flush_tokens()
+                zhuyin_out.append(line[idx])
+                idx += 1
+
+        # 行尾若尚有 token，補輸出
+        flush_tokens()
+        results.append((line, "".join(zhuyin_out)))
+
+    return results
+
 
 def main():
-    parser = argparse.ArgumentParser(description='Convert IAST text to Zhuyin.')
+    parser = argparse.ArgumentParser(description='Convert IAST text to Zhuyin Markdown table.')
     parser.add_argument('input', help='Input file with IAST text')
-    parser.add_argument('output', help='Output file with Zhuyin')
+    parser.add_argument('output', help='Output Markdown file')
     args = parser.parse_args()
 
     with open(args.input, 'r', encoding='utf-8') as f:
         input_text = f.read()
 
-    output_text = iast_to_zhuyin(input_text)
+    pairs = iast_to_zhuyin_sentence_pairs(input_text)
 
     with open(args.output, 'w', encoding='utf-8') as f:
-        f.write(output_text)
+        f.write('| IAST 原文 | 注音符號轉換 |\n')
+        f.write('|------------|----------------|\n')
+        for iast_line, zhuyin_line in pairs:
+            f.write(f'| {iast_line} | {zhuyin_line} |\n')
 
-    print(f"Converted IAST to Zhuyin and saved to {args.output}")
+    print(f"Converted IAST text to sentence-wise Zhuyin table and saved to {args.output}")
 
 if __name__ == '__main__':
     main()
